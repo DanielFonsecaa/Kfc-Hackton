@@ -3,45 +3,74 @@ import routes from "../routes.js";
 
 
 
-export let singleId = 0;
+export let pathIdentifier = 0;
 
 function filterByType(data, type) {
-    return data.competitions.filter(competition => competition.type === type);
+    return data.filter(athlete =>
+        athlete.competitions.some(competition => competition.type === type))
 }
 
-function render(athlete) {
+function render(athletes) {
 
-    // Example usage:
-    const athletimsCompetitions = filterByType(athlete, 'athletims');
-    const swimCompetitions = filterByType(athlete, 'swim');
+    const athletismCompetitions = filterByType(athletes, 'run');
+    const typesAthletics = [{
+        id: 1,
+        modality: "100m",
+        gender: "Masculine"
+    },
+    {
+        id: 2,
+        modality: "200m",
+        gender: "Masculine"
+    },
+    {
+        id: 3,
+        modality: "100m",
+        gender: "Feminine"
+    },
+    {
+        id: 4,
+        modality: "200m",
+        gender: "Feminine"
+    },];
 
-    console.log(athletimsCompetitions);
+    const swimCompetitions = filterByType(athletes, 'swim');
+
+    console.log(athletismCompetitions);
     console.log(swimCompetitions);
     const container = document.querySelector("#container");
     container.innerHTML = '<br>'; //removes the previous elements
 
+    const nav = document.createElement('nav');
+    nav.innerHTML = `<div class="container-fluid">
+
+    <a class="navbar-brand" href="/" id="anchor"> <i class="fa-solid fa-arrow-left"></i> Go Back</a>
+    </div>`;
+
+    nav.classList = "navbar sticky-top navbar-expand-lg bg-body-tertiary";
+    container.prepend(nav);
+
     const list = document.createElement('div');
     list.className = `text-center`;
     const atletismTitle = document.createElement('div');
-    atletismTitle.innerHTML = "<h2>ATLETISM</h2>";
+    atletismTitle.innerHTML = "<h2>ATHLETICS</h2>";
     atletismTitle.className = "olympicContainer"
     const miniContainer = document.createElement('div');
     miniContainer.id = "miniContainer";
 
 
-    athletimsCompetitions.forEach(({ type, competitionName, id }) => {
-
+    typesAthletics.forEach((type) => {
 
 
         const item = document.createElement('div');
-        item.id="card";
+        item.id = "card";
         item.style.fontSize = "x-small";
         item.style = "margin: 1%;";
         item.innerHTML = ` <div class="card text-bg-dark mb-3" style="width: 18rem;">
                                 <div class="card-body">
-                                    <h5 class="card-title">${type}</h5>
-                                    <p class="card-text">Distance: ${competitionName}</p>
-                                    <button id="info-${id}" class="btn btn-primary betAnchor">Bet on me</button> 
+                                    <h5 class="card-title">Athletics</h5>
+                                    <p class="card-text">${type.modality} ${type.gender}</p>
+                                    <button id="id-${type.id}" class="btn btn-primary betAnchor">Bet on me</button> 
                                 </div>
                             </div>
                         <br/>`;
@@ -54,23 +83,45 @@ function render(athlete) {
     list2.className = `text-center`;
 
     const swimTitle = document.createElement('div');
-    swimTitle.innerHTML = "<h2>SWIM</h2>";
+    swimTitle.innerHTML = "<h2>SWIMMING</h2>";
 
     const otherContainer = document.createElement('div');
     otherContainer.id = "miniContainer";
 
+    const typesSwim = [{
+        id: 5,
+        modality: "100m freestyle",
+        gender: "Masculine"
+    },
+    {
+        id: 6,
+        modality: "200m freestyle",
+        gender: "Masculine"
+    },
+    {
+        id: 7,
+        modality: "100m freestyle",
+        gender: "Feminine"
+    },
+    {
+        id: 8,
+        modality: "200m freestyle",
+        gender: "Feminine"
+    },];
 
-    swimCompetitions.forEach(({ type, competitionName, id }) => {
+
+    typesSwim.forEach((type) => {
 
         const item = document.createElement('div');
         item.style.fontSize = "x-small";
-        item.id="card";
+        item.id = "card";
         item.style = "margin: 1%;";
         item.innerHTML = ` <div class="card text-bg-dark mb-3" style="width: 18rem;">
                                 <div class="card-body">
-                                    <h5 class="card-title">${type}</h5>
-                                    <p class="card-text">Distance: ${competitionName}</p>
-                                    <button id="info-${id}" class="btn btn-primary betAnchor">Bet on me</button> 
+                                    <h5 class="card-title">Swimming</h5>
+                                    <p class="card-text">${type.modality} ${type.gender}</p>
+                                    <button id="id-${type.id}" class="btn btn-primary betAnchor">Bet on me</button> 
+                                </div>
                                 </div>
                             </div>
                         <br/>`;
@@ -103,13 +154,14 @@ function render(athlete) {
 
             const target = e.target;
             if (target.classList.contains('betAnchor')) {
-                const idMatch = target.id.match(/info-(\d+)/);
+                const idMatch = target.id.match(/id-(\d+)/);
                 if (idMatch) {
                     const id = idMatch[1];
-                    singleId = id;
-                    console.log("just add this id", singleId)
-                    const dinamicPath = routes.singleBet.path;
-                    router.navigate(dinamicPath);
+                    pathIdentifier = "id" + id;
+
+                    //console.log("just add this id", singleId)
+                    //const dinamicPath = routes.singleBet.path;
+                    router.navigate(routes[pathIdentifier].path);
                 }
             }
         })

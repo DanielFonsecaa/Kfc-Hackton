@@ -3,8 +3,7 @@ import homeView from '../view/homeView.js';
 
 export async function init() {
     try {
-   //const something = await someFunction();
-     // homeView.render(something);
+      homeView.render();
     } catch (error) {
       console.error('Error fetching character:', error);
     }
